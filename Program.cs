@@ -1,64 +1,53 @@
 ﻿using System;
 using System.Text;
 
-public class StringGenerator
+class StrWithout3A3B
 {
     public string Solution(int AA, int AB, int BB)
     {
-        StringBuilder result = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-        while (AA > 0 || BB > 0)
+        while (AA > 0 || BB > 0 || AB > 0)
         {
-            if (AA > BB)
+            if (AA >= BB && AA > 0 && CanAdd(sb, 'A'))
             {
-                if (AA >= 2)
-                {
-                    result.Append("AA");
-                    AA -= 2;
-                }
-                else if (AA == 1)
-                {
-                    result.Append("AA");
-                    AA--;
-                }
-                if (BB > 0)
-                {
-                    result.Append("BB");
-                    BB--;
-                }
+                sb.Append("AA");
+                AA--;
+            }
+            else if (BB > 0 && CanAdd(sb, 'B'))
+            {
+                sb.Append("BB");
+                BB--;
+            }
+            else if (AB > 0 && CanAdd(sb, 'A'))
+            {
+                sb.Append("AB");
+                AB--;
             }
             else
             {
-                if (BB >= 2)
-                {
-                    result.Append("BB");
-                    BB -= 2;
-                }
-                else if (BB == 1)
-                {
-                    result.Append("BB");
-                    BB--;
-                }
-                if (AA > 0)
-                {
-                    result.Append("AA");
-                    AA--;
-                }
+                break;
             }
         }
 
-        while (AB > 0)
-        {
-            result.Append("AB");
-            AB--;
-        }
-
-        return result.ToString();
+        return sb.ToString();
     }
 
-    public static void Main()
+    private bool CanAdd(StringBuilder sb, char c)
     {
-        StringGenerator generator = new StringGenerator();
-        Console.WriteLine(generator.Solution(5, 0, 2)); // Example input
+        int length = sb.Length;
+
+        if (length >= 2 && sb[length - 1] == c && sb[length - 2] == c)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    static void Main()
+    {
+        StrWithout3A3B solution = new StrWithout3A3B();
+        Console.WriteLine(solution.Solution(0, 0, 2));
     }
 }
