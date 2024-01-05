@@ -1,53 +1,74 @@
 ﻿using System;
-using System.Text;
 
-class StrWithout3A3B
+class Program
 {
-    public string Solution(int AA, int AB, int BB)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        while (AA > 0 || BB > 0 || AB > 0)
-        {
-            if (AA >= BB && AA > 0 && CanAdd(sb, 'A'))
-            {
-                sb.Append("AA");
-                AA--;
-            }
-            else if (BB > 0 && CanAdd(sb, 'B'))
-            {
-                sb.Append("BB");
-                BB--;
-            }
-            else if (AB > 0 && CanAdd(sb, 'A'))
-            {
-                sb.Append("AB");
-                AB--;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        return sb.ToString();
-    }
-
-    private bool CanAdd(StringBuilder sb, char c)
-    {
-        int length = sb.Length;
-
-        if (length >= 2 && sb[length - 1] == c && sb[length - 2] == c)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     static void Main()
     {
-        StrWithout3A3B solution = new StrWithout3A3B();
-        Console.WriteLine(solution.Solution(0, 0, 2));
+        int aa = 0, ab = 2, bb = 2;
+        string longestString = GenerateLongestString(aa, ab, bb);
+        Console.WriteLine(longestString);
+    }
+
+    static string GenerateLongestString(int aa, int ab, int bb)
+    {
+        string result = "";
+
+        string aaString = GenerateString(aa, ab, bb, "AA");
+        string abString = GenerateString(aa, ab, bb, "AB");
+        string bbString = GenerateString(aa, ab, bb, "BB");
+
+        result = GetLongestString(result, aaString);
+        result = GetLongestString(result, abString);
+        result = GetLongestString(result, bbString);
+
+        return result;
+    }
+
+    static string GenerateString(int aa, int ab, int bb, string lastAdded)
+    {
+        if (aa == 0 && ab == 0 && bb == 0)
+        {
+            return "";
+        }
+
+        string result = "";
+
+        if (lastAdded == "AA")
+        {
+            if (bb > 0)
+            {
+                result = "BB" + GenerateString(aa, ab, bb - 1, "BB");
+            }
+        }
+        else if (lastAdded == "AB")
+        {
+            if (aa > 0)
+            {
+                result = "AA" + GenerateString(aa - 1, ab, bb, "AA");
+            }
+            if (ab > 0)
+            {
+                result = GetLongestString(result, "AB" + GenerateString(aa, ab - 1, bb, "AB"));
+            }
+        }
+        else if (lastAdded == "BB")
+        {
+            if (aa > 0)
+            {
+                result = GetLongestString(result, "AA" + GenerateString(aa - 1, ab, bb, "AA"));
+            }
+            if (ab > 0)
+            {
+                result = GetLongestString(result, "AB" + GenerateString(aa, ab - 1, bb, "AB"));
+            }
+        }
+
+        return result;
+    }
+
+    static string GetLongestString(string str1, string str2)
+    {
+        return str1.Length >= str2.Length ? str1 : str2;
     }
 }
+//hope you don't have another input data in order to find bugs in this code :)
